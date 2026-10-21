@@ -760,8 +760,13 @@ TEST_F(SceneTest, ShadowTextureSize)
   auto scene = engine->CreateScene("scene");
   ASSERT_NE(nullptr, scene);
 
-  // Default shadow texture size for directional light is 2048u
+  // Default shadow texture size for directional light is 2048u, or 4096u on
+  // Apple
+#ifdef __APPLE__
+  EXPECT_EQ(scene->ShadowTextureSize(LightType::DIRECTIONAL), 4096u);
+#else
   EXPECT_EQ(scene->ShadowTextureSize(LightType::DIRECTIONAL), 2048u);
+#endif
 
   // Currently only support setting shadow texture size for
   // directional light

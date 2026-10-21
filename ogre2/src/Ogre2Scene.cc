@@ -113,7 +113,13 @@ class gz::rendering::Ogre2ScenePrivate
   public: unsigned int maxTexSize = 16384u;
 
   /// \brief Shadow texture size for directional light
+#ifdef __APPLE__
+  // Macs have GPUs with plenty of (unified) memory, and 2048 looks blocky at
+  // Retina resolution; 4096 is much crisper for ~96 MB of shadow maps.
+  public: unsigned int dirTexSize = 4096u;
+#else
   public: unsigned int dirTexSize = 2048u;
+#endif
 
   /// \brief Shadow texture size for spot and point lights
   public: unsigned int spotPointTexSize = 2048u;
