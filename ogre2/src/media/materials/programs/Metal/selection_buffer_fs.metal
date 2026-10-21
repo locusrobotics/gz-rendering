@@ -34,10 +34,13 @@ struct Params
 
 float packFloat(float4 color)
 {
-  int rgba = (int(color.x * 255.0) << 24) +
-             (int(color.y * 255.0) << 16) +
-             (int(color.z * 255.0) << 8) +
-             int(color.w * 255.0);
+  // Use uint for bit operations to avoid potential sign extension issues
+  uint r = uint(clamp(color.x, 0.0f, 1.0f) * 255.0 + 0.5);
+  uint g = uint(clamp(color.y, 0.0f, 1.0f) * 255.0 + 0.5);
+  uint b = uint(clamp(color.z, 0.0f, 1.0f) * 255.0 + 0.5);
+  uint a = uint(clamp(color.w, 0.0f, 1.0f) * 255.0 + 0.5);
+
+  uint rgba = (r << 24) | (g << 16) | (b << 8) | a;
   return as_type<float>(rgba);
 }
 

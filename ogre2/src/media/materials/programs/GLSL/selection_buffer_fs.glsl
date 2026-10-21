@@ -42,11 +42,14 @@ vulkan( }; )
 
 float packFloat(vec4 color)
 {
-  int rgba = (int(color.x * 255.0) << 24) +
-             (int(color.y * 255.0) << 16) +
-             (int(color.z * 255.0) << 8) +
-             int(color.w * 255.0);
-  return intBitsToFloat(rgba);
+  // Use uint for bit operations and clamp values to avoid overflow
+  uint r = uint(clamp(color.x, 0.0, 1.0) * 255.0 + 0.5);
+  uint g = uint(clamp(color.y, 0.0, 1.0) * 255.0 + 0.5);
+  uint b = uint(clamp(color.z, 0.0, 1.0) * 255.0 + 0.5);
+  uint a = uint(clamp(color.w, 0.0, 1.0) * 255.0 + 0.5);
+
+  uint rgba = (r << 24u) | (g << 16u) | (b << 8u) | a;
+  return uintBitsToFloat(rgba);
 }
 
 void main()
