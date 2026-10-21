@@ -1077,9 +1077,6 @@ Ogre::HlmsPbsDatablock *Ogre2Material::Datablock() const
 void Ogre2Material::SetTextureMapImpl(const std::string &_texture,
   Ogre::PbsTextureTypes _type)
 {
-  // FIXME(anyone) need to keep baseName = _texture for all meshes. Refer to
-  // https://github.com/gazebosim/gz-rendering/issues/139
-  // for more details
   std::string baseName = _texture;
   if (common::isFile(_texture))
   {
@@ -1102,17 +1099,11 @@ void Ogre2Material::SetTextureMapImpl(const std::string &_texture,
     return;
   }
 
-  // temp workaround check if the model is a OBJ file
-  {
-    size_t idx = _texture.rfind("meshes");
-    if (idx != std::string::npos)
-    {
-      std::string objFile =
-        common::joinPaths(_texture.substr(0, idx), "meshes", "model.obj");
-      if (common::isFile(objFile))
-        baseName = _texture;
-    }
-  }
+  // Key textures by their full path. Models often share file names (e.g.
+  // every Google Scanned Objects model has materials/textures/texture.png),
+  // and keying by basename made all of them render with whichever texture
+  // was loaded first. See https://github.com/gazebosim/gz-rendering/issues/139
+  baseName = _texture;
 
   Ogre::Root *root = Ogre2RenderEngine::Instance()->OgreRoot();
   Ogre::TextureGpuManager *textureMgr =
@@ -1417,7 +1408,9 @@ void Ogre2Material::FillUnlitDatablock(Ogre::HlmsUnlitDatablock *_datablock)
 {
   if (!this->textureName.empty())
   {
-    std::string baseName = common::basename(this->textureName);
+    // Same texture key as SetTextureMapImpl: full path for files on disk
+    std::string baseName = common::isFile(this->textureName) ?
+        this->textureName : common::basename(this->textureName);
 
     Ogre::Root *root = Ogre2RenderEngine::Instance()->OgreRoot();
     Ogre::TextureGpuManager *textureMgr =
