@@ -75,7 +75,7 @@ float rand(float2 co)
     return r;
 }
 
-float4 gaussrand(float2 co, float3 offsets, float mean, float stddev)
+float4 gaussrand(float2 co, float3 offsets, float stddev, float mean)
 {
   float U, V, R, Z;
   U = rand(co + float2(offsets.x, offsets.x));
