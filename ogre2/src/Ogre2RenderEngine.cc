@@ -955,7 +955,7 @@ void Ogre2RenderEngine::RegisterHlms()
     Ogre::Ogre2GzHlmsUnlit *hlmsUnlit = 0;
     // Create & Register HlmsUnlit
     // Get the path to all the subdirectories used by HlmsUnlit
-    Ogre::Ogre2GzHlmsUnlit::getDefaultPaths(mainFolderPath,
+    Ogre::Ogre2GzHlmsUnlit::GetDefaultPaths(mainFolderPath,
                                              libraryFoldersPaths);
     Ogre::Archive *archiveUnlit = archiveManager.load(
         rootHlmsFolder + mainFolderPath, "FileSystem", true);

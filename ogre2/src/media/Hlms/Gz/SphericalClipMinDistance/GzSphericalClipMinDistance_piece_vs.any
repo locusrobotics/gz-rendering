@@ -2,7 +2,8 @@
   @piece( custom_vs_posExecution_spherical_clip_min_distance )
 		@property( gz_spherical_clip_needs_worldPos )
 			// Unlit didn't declare this
-			float3 worldPos = (gl_Position * passBuf.invViewProj).xyz;
+			// Same cross-API reconstruction HlmsUnlit uses for its clip planes
+			float3 worldPos = mul( outVs_Position, passBuf.invViewProj ).xyz;
 		@end
 
 		// Ogre 2.2 should use outVs_clipDistanceN for compatibility with all
