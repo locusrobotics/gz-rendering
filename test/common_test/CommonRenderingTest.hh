@@ -69,6 +69,11 @@ GetEngineParams(const std::string &_engine, const std::string &_backend, const s
     gzdbg << "Using OGRE2-METAL backend to test" << std::endl;
     engineParams["metal"] = "1";
   }
+  else if (_engine == "ogre2" && (_backend == "gl3plus" || _backend == "opengl"))
+  {
+    // Ask for OpenGL explicitly, since Metal is the default on Apple
+    engineParams["metal"] = "0";
+  }
   if (!_headless.empty())
   {
     engineParams["headless"] = "1";

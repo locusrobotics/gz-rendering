@@ -83,7 +83,14 @@ class GZ_RENDERING_OGRE2_HIDDEN
 #endif
 
   /// \brief The graphics API to use
+#ifdef __APPLE__
+  // OpenGL is deprecated on macOS, and recent releases' GL-on-Metal layer
+  // rejects Ogre's shaders, so Metal is the default there. Callers can
+  // still opt into OpenGL with "metal" = "0" or "useCurrentGLContext" = "1".
+  public: gz::rendering::GraphicsAPI graphicsAPI{GraphicsAPI::METAL};
+#else
   public: gz::rendering::GraphicsAPI graphicsAPI{GraphicsAPI::OPENGL};
+#endif
 
   /// \brief A list of supported fsaa levels
   public: std::vector<unsigned int> fsaaLevels;
@@ -393,9 +400,16 @@ bool Ogre2RenderEngine::LoadImpl(
   {
     bool useMetal;
     std::istringstream(it->second) >> useMetal;
-    if(useMetal)
-        this->dataPtr->graphicsAPI = GraphicsAPI::METAL;
+    this->dataPtr->graphicsAPI =
+        useMetal ? GraphicsAPI::METAL : GraphicsAPI::OPENGL;
   }
+#ifdef __APPLE__
+  else if (this->useCurrentGLContext)
+  {
+    // Sharing the caller's GL context only makes sense with OpenGL
+    this->dataPtr->graphicsAPI = GraphicsAPI::OPENGL;
+  }
+#endif
 
 #ifdef OGRE_BUILD_RENDERSYSTEM_VULKAN
   this->dataPtr->vkExternalInstance.instance = nullptr;
