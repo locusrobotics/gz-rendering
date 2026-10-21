@@ -750,6 +750,17 @@ uint8_t Ogre2RenderTarget::TargetFSAA(uint8_t _fsaa)
 
   if (it == fsaaLevels.end())
   {
+    // Fall back to the highest supported level below the requested one
+    // rather than disabling anti-aliasing. E.g. Apple GPUs support up to 4x,
+    // so the common default of 8x would otherwise render with none at all.
+    // fsaaLevels is sorted in ascending order.
+    uint8_t fallback = 0u;
+    for (auto level : fsaaLevels)
+    {
+      if (level <= _fsaa)
+        fallback = static_cast<uint8_t>(level);
+    }
+
     // output warning but only do it once
     static bool ogre2FSAAWarn = false;
     if (!ogre2FSAAWarn)
@@ -765,10 +776,11 @@ uint8_t Ogre2RenderTarget::TargetFSAA(uint8_t _fsaa)
       // we need cast to avoid overload confusion with unsigned char type
       gzwarn << "Anti-aliasing level of '" << static_cast<int>(_fsaa) << "' "
               << "is not supported; valid FSAA levels are: " << os.str()
-              << ". Setting to 1" << std::endl;
+              << ". Setting to "
+              << static_cast<int>(fallback > 1u ? fallback : 1u) << std::endl;
       ogre2FSAAWarn = true;
     }
-    _fsaa = 0u;
+    _fsaa = fallback;
   }
 
   if (_fsaa == 0u)
