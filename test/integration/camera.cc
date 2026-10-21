@@ -167,7 +167,7 @@ TEST_F(CameraTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(Track))
 }
 
 /////////////////////////////////////////////////
-TEST_F(CameraTest, GZ_UTILS_TEST_ENABLED_ONLY_ON_LINUX(VisualAt))
+TEST_F(CameraTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(VisualAt))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
 
@@ -684,11 +684,7 @@ TEST_F(CameraTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(ShaderSelection))
   // verify correct visual is returned
   VisualPtr vis = camera->VisualAt(
       math::Vector2i(camera->ImageWidth() / 2, camera->ImageHeight() / 2));
-  // TODO(anyone) Skip expectation that fails with Metal API
-  if (GraphicsAPI::METAL != this->engine->GraphicsAPI())
-  {
-    EXPECT_NE(nullptr, vis);
-  }
+  EXPECT_NE(nullptr, vis);
   if (vis)
   {
     EXPECT_EQ("box", vis->Name());

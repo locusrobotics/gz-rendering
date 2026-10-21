@@ -134,9 +134,11 @@ TEST_F(LidarVisualTest, Configure)
 TEST_F(LidarVisualTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(RaysUnitBox))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
-  #ifdef __APPLE__
-    GTEST_SKIP() << "Unsupported on apple, see issue #35.";
-  #endif
+#ifdef __APPLE__
+  // OGRE 1.x GPU rays rely on legacy OpenGL; on macOS only ogre2 (Metal)
+  // produces correct ranges.
+  CHECK_UNSUPPORTED_ENGINE("ogre");
+#endif
 
   // Test lidar visual with 3 boxes in the world, using reading from GPU rays
   // First GPU rays at identity orientation, second at 90 degree roll
@@ -360,9 +362,6 @@ TEST_F(LidarVisualTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(RaysUnitBox))
 TEST_F(LidarVisualTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(LaserVertical))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
-  #ifdef __APPLE__
-    GTEST_SKIP() << "Unsupported on apple, see issue #35.";
-  #endif
 
   // Test a rays that has a vertical range component.
   // Place a box within range and verify range values,

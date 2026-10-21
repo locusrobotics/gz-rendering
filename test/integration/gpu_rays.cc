@@ -142,10 +142,6 @@ TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(CreateRemove))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
 
-  #ifdef __APPLE__
-    GTEST_SKIP() << "Unsupported on apple, see issue #35.";
-  #endif
-
   ScenePtr scene = engine->CreateScene("scene");
   ASSERT_NE(nullptr, scene);
 
@@ -192,10 +188,11 @@ TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(CreateRemove))
 TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(RaysUnitBox))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
-
-  #ifdef __APPLE__
-    GTEST_SKIP() << "Unsupported on apple, see issue #35.";
-  #endif
+#ifdef __APPLE__
+  // OGRE 1.x GPU rays rely on legacy OpenGL; on macOS only ogre2 (Metal)
+  // produces correct ranges.
+  CHECK_UNSUPPORTED_ENGINE("ogre");
+#endif
 
   // Test GPU rays with 3 boxes in the world.
   // First GPU rays at identity orientation, second at 90 degree roll
@@ -367,9 +364,6 @@ TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(RaysUnitBox))
 TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(LaserVertical))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
-  #ifdef __APPLE__
-    GTEST_SKIP() << "Unsupported on apple, see issue #35.";
-  #endif
 
   // Test a rays that has a vertical range component.
   // Place a box within range and verify range values,
@@ -752,9 +746,11 @@ TEST_F(GpuRaysTest, RaysParticles)
 TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(SingleRay))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
-  #ifdef __APPLE__
-    GTEST_SKIP() << "Unsupported on apple, see issue #35.";
-  #endif
+#ifdef __APPLE__
+  // OGRE 1.x GPU rays rely on legacy OpenGL; on macOS only ogre2 (Metal)
+  // produces correct ranges.
+  CHECK_UNSUPPORTED_ENGINE("ogre");
+#endif
 
   // Test single ray box intersection.
   // Place ray above box looking downwards
@@ -841,7 +837,9 @@ TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(Visibility))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
 #ifdef __APPLE__
-  GTEST_SKIP() << "Unsupported on apple, see issue #35.";
+  // OGRE 1.x GPU rays rely on legacy OpenGL; on macOS only ogre2 (Metal)
+  // produces correct ranges.
+  CHECK_UNSUPPORTED_ENGINE("ogre");
 #endif
 
   // Test GPU rays with 3 boxes in the world.
@@ -950,7 +948,9 @@ TEST_F(GpuRaysTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(Heightmap))
 {
   CHECK_UNSUPPORTED_ENGINE("optix");
 #ifdef __APPLE__
-  GTEST_SKIP() << "Unsupported on apple, see issue #35.";
+  // OGRE 1.x GPU rays rely on legacy OpenGL; on macOS only ogre2 (Metal)
+  // produces correct ranges.
+  CHECK_UNSUPPORTED_ENGINE("ogre");
 #endif
 
   // \todo(anyone) test fails on github action but pass on other

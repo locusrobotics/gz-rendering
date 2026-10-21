@@ -89,6 +89,25 @@ class CommonRenderingTest: public testing::Test
   /// \brief Set up the test case
   public: void SetUp() override
   {
+    // Check for Metal headless mode FIRST, before any gz initialization
+    // to prevent crashes when Metal tries to access WindowServer
+    #ifdef __APPLE__
+    {
+      std::string envEngine, envBackend, envHeadless;
+      if (gz::utils::env(kEngineToTestEnv, envEngine) &&
+          gz::utils::env(kEngineBackend, envBackend) &&
+          gz::utils::env(kEngineHeadless, envHeadless))
+      {
+        if (envEngine == "ogre2" && envBackend == "metal" && !envHeadless.empty())
+        {
+          GTEST_SKIP() << "Metal backend cannot run in headless mode (GZ_ENGINE_HEADLESS="
+                       << envHeadless << "). Metal requires WindowServer/display access. "
+                       << "Run with GUI session or set GZ_ENGINE_BACKEND=gl3plus";
+        }
+      }
+    }
+    #endif
+
     gz::common::Console::SetVerbosity(4);
 
     auto [envEngine, envBackend, envHeadless] = GetTestParams();
@@ -99,6 +118,7 @@ class CommonRenderingTest: public testing::Test
     }
 
     auto engineParams = GetEngineParams(envEngine, envBackend, envHeadless);
+
     this->engineToTest = envEngine;
     engine = gz::rendering::engine(this->engineToTest, engineParams);
     if (!engine)

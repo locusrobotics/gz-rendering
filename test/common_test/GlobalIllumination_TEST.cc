@@ -35,10 +35,6 @@ class GlobalIlluminationTest : public CommonRenderingTest
 /////////////////////////////////////////////////
 TEST_F(GlobalIlluminationTest, GlobalIlluminationVct)
 {
-#ifdef __APPLE__
-  GTEST_SKIP() << "Unsupported on apple.";
-#endif
-
   // \todo(anyone) test fails on github action but pass on other
   // ubuntu jenkins CI. Need to investigate further.
   // Github action sets the MESA_GL_VERSION_OVERRIDE variable
@@ -114,10 +110,6 @@ TEST_F(GlobalIlluminationTest, GlobalIlluminationVct)
 /////////////////////////////////////////////////
 TEST_F(GlobalIlluminationTest, GlobalIlluminationCiVct)
 {
-#ifdef __APPLE__
-  GTEST_SKIP() << "Unsupported on apple.";
-#endif
-
   // \todo(anyone) test fails on github action but pass on other
   // ubuntu jenkins CI. Need to investigate further.
   // Github action sets the MESA_GL_VERSION_OVERRIDE variable

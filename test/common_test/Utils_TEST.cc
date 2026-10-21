@@ -46,7 +46,7 @@ class UtilTest : public CommonRenderingTest
 };
 
 /////////////////////////////////////////////////
-TEST_F(UtilTest, GZ_UTILS_TEST_ENABLED_ONLY_ON_LINUX(ClickToScene))
+TEST_F(UtilTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(ClickToScene))
 {
   ScenePtr scene = engine->CreateScene("scene");
   ASSERT_NE(nullptr, scene);
@@ -168,7 +168,7 @@ TEST_F(UtilTest, GZ_UTILS_TEST_ENABLED_ONLY_ON_LINUX(ClickToScene))
 }
 
 /////////////////////////////////////////////////
-TEST_F(UtilTest, GZ_UTILS_TEST_ENABLED_ONLY_ON_LINUX(ClickToSceneHeightmap))
+TEST_F(UtilTest, GZ_UTILS_TEST_DISABLED_ON_WIN32(ClickToSceneHeightmap))
 {
   CHECK_SUPPORTED_ENGINE("ogre2");
 
